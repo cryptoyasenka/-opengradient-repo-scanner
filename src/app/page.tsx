@@ -2,59 +2,85 @@
 
 import { useState } from "react";
 import { RepoInput } from "@/components/RepoInput";
-import { RepoDataDisplay } from "@/components/RepoDataDisplay";
 import { ErrorDisplay } from "@/components/ErrorDisplay";
-import { LoadingDisplay } from "@/components/LoadingDisplay";
+import { AnalysisProgress } from "@/components/AnalysisProgress";
+import { VerdictDisplay } from "@/components/VerdictDisplay";
 import { Button } from "@/components/ui/button";
-import type { RepoData, FetchRepoError } from "@/types/github";
+import type { FetchRepoError } from "@/types/github";
+import type { VerdictResult } from "@/types/verdict";
 
-type PageState = "idle" | "loading" | "success" | "error";
+type AnalysisStep = "idle" | "fetching" | "analyzing" | "done" | "error";
 
 export default function Home() {
-  const [pageState, setPageState] = useState<PageState>("idle");
-  const [repoData, setRepoData] = useState<RepoData | null>(null);
+  const [step, setStep] = useState<AnalysisStep>("idle");
+  const [verdictResult, setVerdictResult] = useState<VerdictResult | null>(null);
+  const [analysisError, setAnalysisError] = useState<string | null>(null);
   const [fetchError, setFetchError] = useState<FetchRepoError | null>(null);
+  const [repoFullName, setRepoFullName] = useState<string>("");
 
-  async function handleRepoSubmit(repoInput: string) {
-    setPageState("loading");
-    setRepoData(null);
+  async function handleAnalyze(repoUrl: string) {
+    setStep("fetching");
+    setVerdictResult(null);
+    setAnalysisError(null);
     setFetchError(null);
+    setRepoFullName("");
 
+    // Step 1: Fetch repo data
+    let repoData;
     try {
-      const response = await fetch("/api/fetch-repo", {
+      const res = await fetch("/api/fetch-repo", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ repo: repoInput }),
+        body: JSON.stringify({ repo: repoUrl }),
       });
-
-      const json = await response.json();
-
-      if (!response.ok) {
+      const json = await res.json();
+      if (!res.ok) {
         setFetchError(json as FetchRepoError);
-        setPageState("error");
+        setStep("error");
         return;
       }
-
-      setRepoData(json as RepoData);
-      setPageState("success");
+      repoData = json;
+      setRepoFullName(repoData.repo?.full_name ?? repoUrl);
     } catch {
-      setFetchError({
-        error: "Network error: could not reach the server. Check your connection.",
-        code: "API_ERROR",
+      setAnalysisError("Network error: could not reach the server. Check your connection.");
+      setStep("error");
+      return;
+    }
+
+    // Step 2: Analyze with AI
+    setStep("analyzing");
+    try {
+      const res = await fetch("/api/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ repoData }),
       });
-      setPageState("error");
+      const json = await res.json();
+      if (!res.ok) {
+        setAnalysisError(json.error ?? "AI analysis failed");
+        setStep("error");
+        return;
+      }
+      setVerdictResult(json as VerdictResult);
+      setStep("done");
+    } catch {
+      setAnalysisError("AI analysis failed. Please try again.");
+      setStep("error");
     }
   }
 
   function handleReset() {
-    setPageState("idle");
-    setRepoData(null);
+    setStep("idle");
+    setVerdictResult(null);
+    setAnalysisError(null);
     setFetchError(null);
+    setRepoFullName("");
   }
 
   return (
     <main className="min-h-screen bg-background">
       <div className="mx-auto max-w-3xl px-4 py-12">
+        {/* Header */}
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold tracking-tight">GitHub Security Checker</h1>
           <p className="mt-2 text-muted-foreground">
@@ -62,22 +88,40 @@ export default function Home() {
           </p>
         </div>
 
-        <RepoInput
-          onSubmit={handleRepoSubmit}
-          isLoading={pageState === "loading"}
-        />
+        {/* Input — always visible when not done */}
+        {step !== "done" && (
+          <RepoInput
+            onSubmit={handleAnalyze}
+            isLoading={step === "fetching" || step === "analyzing"}
+          />
+        )}
 
-        {pageState === "loading" && <LoadingDisplay />}
+        {/* Progress steps */}
+        {(step === "fetching" || step === "analyzing") && (
+          <AnalysisProgress step={step} />
+        )}
 
-        {pageState === "error" && fetchError && (
+        {/* Fetch error (invalid URL, not found, etc.) */}
+        {step === "error" && fetchError && (
           <div className="mt-8">
             <ErrorDisplay error={fetchError} onReset={handleReset} />
           </div>
         )}
 
-        {pageState === "success" && repoData && (
+        {/* Analysis error */}
+        {step === "error" && !fetchError && (
           <div className="mt-8">
-            <RepoDataDisplay data={repoData} />
+            <AnalysisProgress step="error" errorMessage={analysisError ?? undefined} />
+            <div className="mt-4">
+              <Button variant="outline" onClick={handleReset}>Try another repository</Button>
+            </div>
+          </div>
+        )}
+
+        {/* Verdict result */}
+        {step === "done" && verdictResult && (
+          <div className="mt-8">
+            <VerdictDisplay result={verdictResult} repoFullName={repoFullName} />
             <div className="mt-6 text-center">
               <Button variant="outline" onClick={handleReset}>
                 Check another repository
