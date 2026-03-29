@@ -18,6 +18,20 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "OpenGradient Security Checker",
   description: "AI-powered supply chain security analysis verified on-chain via OpenGradient TEE",
+  openGraph: {
+    title: "OpenGradient Security Checker",
+    description: "AI-powered supply chain security analysis for GitHub repositories, verified on-chain via TEE.",
+    type: "website",
+    siteName: "OpenGradient",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "OpenGradient Security Checker",
+    description: "AI-powered supply chain security analysis for GitHub repositories, verified on-chain via TEE.",
+  },
+  icons: {
+    icon: "https://cdn.jsdelivr.net/gh/golldyck/opengradient-brand-skill@main/logos/og-logo-cyan.webp",
+  },
 };
 
 export default function RootLayout({
