@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
@@ -15,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "GitHub Security Checker",
-  description: "AI-powered supply chain security analysis for GitHub repositories",
+  title: "OpenGradient Security Checker",
+  description: "AI-powered supply chain security analysis verified on-chain via OpenGradient TEE",
 };
 
 export default function RootLayout({
@@ -29,7 +30,11 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col bg-[#0a0f19]">
+        <Script
+          src="https://cdn.jsdelivr.net/gh/golldyck/opengradient-brand-skill@main/og-skill.js"
+          strategy="afterInteractive"
+        />
         <NuqsAdapter>
           <Providers>{children}</Providers>
         </NuqsAdapter>

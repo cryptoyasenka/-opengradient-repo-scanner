@@ -20,11 +20,11 @@ const CATEGORY_LABELS: Record<keyof VerdictResult["categories"], string> = {
 };
 
 const RISK_COLORS: Record<CategoryRiskLevel, string> = {
-  none: "bg-green-100 text-green-800 border-green-200",
-  low: "bg-blue-100 text-blue-800 border-blue-200",
-  medium: "bg-yellow-100 text-yellow-800 border-yellow-200",
-  high: "bg-orange-100 text-orange-800 border-orange-200",
-  critical: "bg-red-100 text-red-800 border-red-200",
+  none: "bg-[rgba(65,200,133,0.15)] text-[#41c885] border-[rgba(65,200,133,0.3)]",
+  low: "bg-[rgba(36,188,227,0.15)] text-[#24bce3] border-[rgba(36,188,227,0.3)]",
+  medium: "bg-[rgba(196,149,8,0.15)] text-[#c49508] border-[rgba(196,149,8,0.3)]",
+  high: "bg-[rgba(255,140,0,0.15)] text-[#ff8c00] border-[rgba(255,140,0,0.3)]",
+  critical: "bg-[rgba(242,58,58,0.15)] text-[#f23a3a] border-[rgba(242,58,58,0.3)]",
 };
 
 interface CategoryAccordionProps {
@@ -44,7 +44,7 @@ export function CategoryAccordion({ categories }: CategoryAccordionProps) {
                 {cat.risk_level}
               </Badge>
             </AccordionTrigger>
-            <AccordionContent className="text-sm text-muted-foreground">
+            <AccordionContent className="text-sm text-[#999999]">
               {cat.findings}
             </AccordionContent>
           </AccordionItem>

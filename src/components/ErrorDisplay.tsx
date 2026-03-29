@@ -18,8 +18,8 @@ export function ErrorDisplay({ error, onReset }: ErrorDisplayProps) {
   const message = ERROR_MESSAGES[error.code] ?? error.error;
 
   return (
-    <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 space-y-3">
-      <p className="text-sm text-destructive">{message}</p>
+    <div className="og-glass-card rounded-xl border-[rgba(242,58,58,0.3)] bg-[rgba(242,58,58,0.06)] p-4 space-y-3">
+      <p className="text-sm text-[#f23a3a]">{message}</p>
       {error.code === "RATE_LIMITED" && (
         <p className="text-xs text-muted-foreground">
           <a

@@ -107,59 +107,82 @@ function HomeContent() {
   }
 
   return (
-    <main className="min-h-screen bg-background">
-      <div className="mx-auto max-w-3xl px-4 py-12">
-        {/* Header */}
-        <div className="mb-8">
-            <h1 className="text-3xl font-bold tracking-tight">GitHub Security Checker</h1>
-            <p className="mt-2 text-muted-foreground">
-              AI-powered supply chain security analysis, verified on-chain.
-            </p>
+    <main className="min-h-screen relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #0a0f19 0%, #141e32 40%, #0e4b5b 100%)' }}>
+      {/* Background glow effect */}
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 50% 0%, rgba(36, 188, 227, 0.08) 0%, transparent 60%)' }} />
+
+      <div className="relative z-10 mx-auto max-w-3xl px-4 py-16">
+        {/* Header with OG Logo */}
+        <div className="mb-12 og-hero-in">
+          <div className="flex items-center gap-3 mb-6">
+            <div data-og-logo="wordmark" className="h-8" />
+          </div>
+          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight og-gradient-text" style={{ animationDelay: '0.2s' }}>
+            Security Checker
+          </h1>
+          <p className="mt-4 text-lg text-[#999999] max-w-xl" style={{ animation: 'og-fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both' }}>
+            AI-powered supply chain security analysis for GitHub repositories, verified on-chain via TEE.
+          </p>
         </div>
 
         {/* Input */}
         {step !== "done" && (
-          <RepoInput
-            onSubmit={handleAnalyze}
-            isLoading={step === "fetching" || step === "analyzing"}
-          />
+          <div className="og-fade-up" style={{ animationDelay: '0.5s' }}>
+            <RepoInput
+              onSubmit={handleAnalyze}
+              isLoading={step === "fetching" || step === "analyzing"}
+            />
+          </div>
         )}
 
         {/* Progress */}
         {(step === "fetching" || step === "analyzing") && (
-          <AnalysisProgress step={step} />
+          <div className="mt-8 og-fade-up">
+            <AnalysisProgress step={step} />
+          </div>
         )}
 
         {/* Fetch error */}
         {step === "error" && fetchError && (
-          <div className="mt-8">
+          <div className="mt-8 og-fade-up">
             <ErrorDisplay error={fetchError} onReset={handleReset} />
           </div>
         )}
 
         {/* Analysis error */}
         {step === "error" && !fetchError && (
-          <div className="mt-8 space-y-4">
+          <div className="mt-8 space-y-4 og-fade-up">
             <AnalysisProgress step="error" errorMessage={analysisError ?? undefined} />
-            <Button variant="outline" onClick={handleReset}>Try another repository</Button>
+            <button onClick={handleReset} className="h-8 px-3 rounded-lg text-sm font-medium border border-[rgba(36,188,227,0.3)] bg-transparent text-[#bdebf7] hover:bg-[rgba(36,188,227,0.1)] hover:border-[rgba(36,188,227,0.5)] transition-all duration-300">Try another repository</button>
           </div>
         )}
 
         {/* Verdict result */}
         {step === "done" && verdictResult && (
-          <div className="mt-8 space-y-6">
+          <div className="mt-8 space-y-6 og-stagger">
             {txHash && (
-              <ProofBadge txHash={txHash} analyzedAt={verdictResult.analyzedAt} />
+              <div className="og-fade-up">
+                <ProofBadge txHash={txHash} analyzedAt={verdictResult.analyzedAt} />
+              </div>
             )}
-            <VerdictDisplay result={verdictResult} repoFullName={repoFullName} />
-            <div className="flex items-center justify-center gap-3">
+            <div className="og-fade-up">
+              <VerdictDisplay result={verdictResult} repoFullName={repoFullName} />
+            </div>
+            <div className="flex items-center justify-center gap-3 og-fade-up">
               <ShareButton />
-              <Button variant="outline" onClick={handleReset}>
+              <button onClick={handleReset} className="h-8 px-3 rounded-lg text-sm font-medium border border-[rgba(36,188,227,0.3)] bg-transparent text-[#bdebf7] hover:bg-[rgba(36,188,227,0.1)] hover:border-[rgba(36,188,227,0.5)] transition-all duration-300">
                 Check another repository
-              </Button>
+              </button>
             </div>
           </div>
         )}
+
+        {/* Footer */}
+        <div className="mt-20 pt-8 border-t border-[rgba(36,188,227,0.1)] text-center">
+          <p className="text-xs text-[#666666]">
+            Powered by <span className="text-[#24bce3]">OpenGradient</span> Trusted Execution Environment
+          </p>
+        </div>
       </div>
     </main>
   );

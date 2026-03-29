@@ -30,20 +30,24 @@ export function RepoInput({ onSubmit, isLoading, disabled }: RepoInputProps) {
         e.preventDefault();
         handleSubmit();
       }}
-      className="flex flex-col gap-2 sm:flex-row"
+      className="flex flex-col gap-3 sm:flex-row"
     >
       <Input
         value={url}
         onChange={(e) => setUrl(e.target.value)}
         placeholder="https://github.com/owner/repo"
-        className="flex-1"
+        className="flex-1 bg-[#141e32] border-[rgba(36,188,227,0.15)] text-[#e6e6e6] placeholder:text-[#666666] focus:border-[#24bce3] focus:ring-[rgba(36,188,227,0.3)] h-11"
         disabled={isLoading || disabled}
       />
-      <Button type="submit" disabled={isLoading || disabled}>
+      <button
+        type="submit"
+        disabled={isLoading || disabled}
+        className="h-11 px-6 rounded-lg font-medium text-sm text-white bg-[#24bce3] hover:bg-[#50c9e9] hover:shadow-[0_0_30px_rgba(36,188,227,0.4)] transition-all duration-300 hover:-translate-y-px disabled:opacity-50 disabled:pointer-events-none whitespace-nowrap"
+      >
         {isLoading ? "Checking..." : "Check Repository"}
-      </Button>
+      </button>
       {validationError && (
-        <p className="w-full text-sm text-destructive">{validationError}</p>
+        <p className="w-full text-sm text-[#f23a3a]">{validationError}</p>
       )}
     </form>
   );

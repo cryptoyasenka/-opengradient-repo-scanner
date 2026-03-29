@@ -18,10 +18,13 @@ export function ShareButton({ className }: ShareButtonProps) {
   }
 
   return (
-    <Button variant="outline" size="sm" onClick={handleCopy} className={className}>
+    <button
+      onClick={handleCopy}
+      className={`inline-flex items-center h-8 px-3 rounded-lg text-sm font-medium border border-[rgba(36,188,227,0.3)] bg-transparent text-[#bdebf7] hover:bg-[rgba(36,188,227,0.1)] hover:border-[rgba(36,188,227,0.5)] transition-all duration-300 ${className ?? ''}`}
+    >
       {copied ? (
         <>
-          <Check className="mr-2 h-4 w-4 text-green-600" />
+          <Check className="mr-2 h-4 w-4 text-[#41c885]" />
           Copied!
         </>
       ) : (
@@ -30,6 +33,6 @@ export function ShareButton({ className }: ShareButtonProps) {
           Share result
         </>
       )}
-    </Button>
+    </button>
   );
 }

@@ -4,6 +4,19 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* OpenGradient Brand Colors */
+:root {
+  --og-primary: #24bce3;
+  --og-primary-light: #50c9e9;
+  --og-primary-dark: #0e4b5b;
+  --og-navy: #0a0f19;
+  --og-navy-light: #141e32;
+  --og-navy-mid: #1d2c4b;
+  --og-success: #41c885;
+  --og-warning: #c49508;
+  --og-error: #f23a3a;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -39,6 +52,14 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-og-primary: var(--og-primary);
+  --color-og-primary-light: var(--og-primary-light);
+  --color-og-primary-dark: var(--og-primary-dark);
+  --color-og-navy: var(--og-navy);
+  --color-og-navy-light: var(--og-navy-light);
+  --color-og-success: var(--og-success);
+  --color-og-warning: var(--og-warning);
+  --color-og-error: var(--og-error);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -48,73 +69,40 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* OpenGradient Dark Theme (default) */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-}
-
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: #0a0f19;
+  --foreground: #e6e6e6;
+  --card: #141e32;
+  --card-foreground: #e6e6e6;
+  --popover: #141e32;
+  --popover-foreground: #e6e6e6;
+  --primary: #24bce3;
+  --primary-foreground: #ffffff;
+  --secondary: #1d2c4b;
+  --secondary-foreground: #bdebf7;
+  --muted: #1d2c4b;
+  --muted-foreground: #999999;
+  --accent: #0e4b5b;
+  --accent-foreground: #e9f8fc;
+  --destructive: #f23a3a;
+  --border: rgba(36, 188, 227, 0.1);
+  --input: rgba(36, 188, 227, 0.15);
+  --ring: rgba(36, 188, 227, 0.4);
+  --chart-1: #24bce3;
+  --chart-2: #41c885;
+  --chart-3: #c49508;
+  --chart-4: #0e4b5b;
+  --chart-5: #50c9e9;
+  --radius: 0.75rem;
+  --sidebar: #141e32;
+  --sidebar-foreground: #e6e6e6;
+  --sidebar-primary: #24bce3;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #1d2c4b;
+  --sidebar-accent-foreground: #e6e6e6;
+  --sidebar-border: rgba(36, 188, 227, 0.1);
+  --sidebar-ring: rgba(36, 188, 227, 0.4);
 }
 
 @layer base {
@@ -128,3 +116,130 @@
     @apply font-sans;
   }
 }
+
+/* OpenGradient Brand Animations */
+@keyframes og-fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes og-hero-in {
+  from { opacity: 0; transform: translateY(30px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes og-glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(36, 188, 227, 0.15); }
+  50% { box-shadow: 0 0 40px rgba(36, 188, 227, 0.35); }
+}
+
+@keyframes og-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes og-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes og-gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.og-fade-up {
+  animation: og-fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.og-hero-in {
+  animation: og-hero-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.og-glow-pulse {
+  animation: og-glow-pulse 3s ease-in-out infinite;
+}
+
+.og-float {
+  animation: og-float 4s ease-in-out infinite;
+}
+
+/* OpenGradient Glass Card */
+.og-glass-card {
+  background: rgba(20, 30, 50, 0.8);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(36, 188, 227, 0.1);
+  border-radius: 1rem;
+  transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.og-glass-card:hover {
+  border-color: rgba(36, 188, 227, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 24px rgba(36, 188, 227, 0.12);
+}
+
+/* OpenGradient Gradient Text */
+.og-gradient-text {
+  background: linear-gradient(90deg, #24bce3 0%, #50c9e9 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* OpenGradient Hero Glow */
+.og-hero-glow {
+  position: relative;
+}
+
+.og-hero-glow::before {
+  content: '';
+  position: absolute;
+  bottom: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 60%;
+  background: radial-gradient(ellipse at 50% 80%, rgba(36, 188, 227, 0.2) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* OpenGradient Button Glow */
+.og-btn-glow {
+  background: #24bce3;
+  color: #ffffff;
+  border: none;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.og-btn-glow:hover {
+  background: #50c9e9;
+  transform: translateY(-1px);
+  box-shadow: 0 0 30px rgba(36, 188, 227, 0.4);
+}
+
+/* OpenGradient Progress Bar */
+.og-progress-track {
+  background: rgba(36, 188, 227, 0.1);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.og-progress-fill {
+  background: linear-gradient(90deg, #0e4b5b, #24bce3);
+  border-radius: 9999px;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Stagger animation delays */
+.og-stagger > :nth-child(1) { animation-delay: 0.1s; }
+.og-stagger > :nth-child(2) { animation-delay: 0.2s; }
+.og-stagger > :nth-child(3) { animation-delay: 0.3s; }
+.og-stagger > :nth-child(4) { animation-delay: 0.4s; }
+.og-stagger > :nth-child(5) { animation-delay: 0.5s; }
+.og-stagger > :nth-child(6) { animation-delay: 0.6s; }
+.og-stagger > :nth-child(7) { animation-delay: 0.7s; }
