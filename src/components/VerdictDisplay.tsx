@@ -93,7 +93,7 @@ export function VerdictDisplay({ result, repoFullName }: VerdictDisplayProps) {
         </p>
         <p>
           <a
-            href={`mailto:security-report@example.com?subject=Incorrect verdict: ${repoFullName}`}
+            href={`https://github.com/cryptoyasenka/opengradient-repo-scanner/issues/new?title=Incorrect verdict: ${encodeURIComponent(repoFullName)}`}
             className="underline hover:text-[#24bce3] transition-colors"
           >
             Report incorrect verdict

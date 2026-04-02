@@ -1,5 +1,10 @@
 # GitHub Security Checker
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Next.js](https://img.shields.io/badge/Next.js-16-black)](https://nextjs.org)
+[![OpenGradient](https://img.shields.io/badge/Verified_by-OpenGradient_TEE-00c2ff)](https://opengradient.ai)
+[![Deploy](https://img.shields.io/badge/Deployed_on-Vercel-black)](https://github-security-checker.vercel.app)
+
 AI-powered supply chain security analysis for GitHub repositories, verified on-chain via [OpenGradient TEE](https://opengradient.ai/).
 
 **[Live Demo](https://github-security-checker.vercel.app)**

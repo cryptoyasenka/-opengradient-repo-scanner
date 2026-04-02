@@ -46,7 +46,6 @@ async function getTeeEndpoint(): Promise<string> {
     const active = tees.filter(t => t.enabled && t.endpoint);
     if (!active.length) throw new Error('No active TEE nodes found');
     cachedTeeEndpoint = active[0].endpoint + '/v1/chat/completions';
-    console.log('[opengradient] Resolved TEE endpoint:', cachedTeeEndpoint);
     return cachedTeeEndpoint;
   } catch (err) {
     console.error('[opengradient] TEE discovery failed:', err);
@@ -235,7 +234,6 @@ async function callWithX402(prompt: string): Promise<{ rawContent: string; txHas
   });
 
   // Step 1: probe for payment requirements (match SDK: include Auth + batch settlement)
-  console.log('[opengradient] Step 1: Probing', teeUrl, 'model:', MODEL);
   const probe = await teeNodeFetch(teeUrl, {
     method: 'POST',
     headers: {
@@ -259,7 +257,6 @@ async function callWithX402(prompt: string): Promise<{ rawContent: string; txHas
   const payHeader = probe.headers.get('payment-required') ?? probe.headers.get('PAYMENT-REQUIRED');
   if (!payHeader) throw new Error('No payment-required header in 402 response');
   const payReqs = JSON.parse(Buffer.from(payHeader, 'base64').toString());
-  console.log('[opengradient] Step 2: Payment options:', payReqs.accepts?.length);
 
   const accepts = payReqs.accepts ?? [];
   let req = accepts.find((r: { scheme: string; network: string }) => r.scheme === 'upto' && r.network === 'eip155:84532');
@@ -275,7 +272,6 @@ async function callWithX402(prompt: string): Promise<{ rawContent: string; txHas
     extensions: payReqs.extensions ?? {},
   };
   const paymentHeader = Buffer.from(JSON.stringify(fullPayment)).toString('base64');
-  console.log('[opengradient] Step 3: Sending payment...');
 
   const paid = await teeNodeFetch(teeUrl, {
     method: 'POST',
@@ -288,11 +284,8 @@ async function callWithX402(prompt: string): Promise<{ rawContent: string; txHas
     body,
   });
 
-  console.log('[opengradient] Payment response:', paid.status);
-
   if (!paid.ok) {
     const errBody = await paid.text().catch(() => '');
-    console.error('[opengradient] Request failed:', paid.status, errBody.slice(0, 500));
     throw Object.assign(
       new Error(`OpenGradient returned ${paid.status}: ${errBody.slice(0, 500)}`),
       { code: 'AI_API_ERROR' as const }
@@ -300,15 +293,9 @@ async function callWithX402(prompt: string): Promise<{ rawContent: string; txHas
   }
 
   // Extract TEE verification data from response headers
-  const teeSignature = paid.headers.get('x-tee-signature');
-  const teeId = paid.headers.get('x-tee-id');
   const teeOutputHash = paid.headers.get('x-tee-output-hash');
   const teeRequestHash = paid.headers.get('x-tee-request-hash');
   const txHash = teeOutputHash ? `${teeRequestHash}:${teeOutputHash}` : null;
-
-  if (teeSignature) {
-    console.log('[opengradient] TEE verified! id:', teeId?.slice(0, 16), 'output_hash:', teeOutputHash?.slice(0, 16));
-  }
 
   const responseData = await paid.json();
   return { rawContent: responseData?.choices?.[0]?.message?.content ?? '', txHash };

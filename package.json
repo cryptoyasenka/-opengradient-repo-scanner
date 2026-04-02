@@ -2,6 +2,26 @@
   "name": "opengradient-repo-scanner",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
+  "author": "cryptoyasenka",
+  "description": "AI-powered supply chain security analysis for GitHub repositories with on-chain TEE verification",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cryptoyasenka/opengradient-repo-scanner"
+  },
+  "homepage": "https://github-security-checker.vercel.app",
+  "bugs": {
+    "url": "https://github.com/cryptoyasenka/opengradient-repo-scanner/issues"
+  },
+  "keywords": [
+    "security",
+    "github",
+    "opengradient",
+    "tee",
+    "ai",
+    "supply-chain",
+    "blockchain"
+  ],
   "scripts": {
     "dev": "next dev",
     "build": "next build",
