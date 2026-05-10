@@ -1,28 +1,59 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { analyzeRepo } from '@/lib/opengradient';
-import type { RepoData } from '@/types/github';
+import { fetchRepoData, parseOwnerRepo } from '@/lib/github';
+import type { FetchRepoError } from '@/types/github';
 import type { AnalyzeError } from '@/types/verdict';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
 export async function POST(req: NextRequest) {
-  let body: { repoData?: RepoData };
+  let body: { repo?: string };
   try {
     body = await req.json();
   } catch {
     return NextResponse.json<AnalyzeError>(
-      { error: 'Request body must be JSON with a "repoData" field', code: 'INVALID_INPUT' },
+      { error: 'Request body must be JSON with a "repo" field', code: 'INVALID_INPUT' },
       { status: 400 }
     );
   }
 
-  const { repoData } = body;
-
-  if (!repoData || typeof repoData !== 'object' || !repoData.repo?.full_name) {
+  const repoInput = body.repo?.trim();
+  if (!repoInput) {
     return NextResponse.json<AnalyzeError>(
-      { error: 'Missing or invalid "repoData" in request body', code: 'INVALID_INPUT' },
+      { error: 'Missing required field: repo', code: 'INVALID_INPUT' },
       { status: 400 }
+    );
+  }
+
+  const parsed = parseOwnerRepo(repoInput);
+  if (!parsed) {
+    return NextResponse.json<AnalyzeError>(
+      { error: 'Invalid GitHub repository URL. Expected format: github.com/owner/repo or owner/repo', code: 'INVALID_INPUT' },
+      { status: 400 }
+    );
+  }
+
+  let repoData;
+  try {
+    repoData = await fetchRepoData(parsed.owner, parsed.repo);
+  } catch (err: unknown) {
+    if (err && typeof err === 'object' && 'code' in err) {
+      const typedErr = err as FetchRepoError;
+      const statusMap: Record<string, number> = {
+        NOT_FOUND: 404,
+        RATE_LIMITED: 429,
+        PRIVATE_REPO: 403,
+        API_ERROR: 502,
+        INVALID_URL: 400,
+      };
+      const status = statusMap[typedErr.code] ?? 500;
+      return NextResponse.json(typedErr, { status });
+    }
+    console.error('[analyze] fetch-repo error:', err);
+    return NextResponse.json<AnalyzeError>(
+      { error: 'Internal server error while fetching repository data', code: 'SERVER_ERROR' },
+      { status: 500 }
     );
   }
 

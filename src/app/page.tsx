@@ -64,12 +64,13 @@ function HomeContent() {
     }
 
     // Step 2: Analyze with AI (+ x402 payment if APP_WALLET_PRIVATE_KEY is set)
+    // Server re-fetches repo data; client-supplied repo string is the only input.
     setStep("analyzing");
     try {
       const res = await fetch("/api/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ repoData }),
+        body: JSON.stringify({ repo: repoUrl }),
       });
       const json = await res.json();
       if (!res.ok) {
