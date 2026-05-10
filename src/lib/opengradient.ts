@@ -27,10 +27,14 @@ const TEE_REGISTRY_ABI = [{
   stateMutability: 'view',
 }] as const;
 
+const TEE_ENDPOINT_TTL_MS = 5 * 60 * 1000;
 let cachedTeeEndpoint: string | null = null;
+let cachedTeeEndpointAt = 0;
 
 async function getTeeEndpoint(): Promise<string> {
-  if (cachedTeeEndpoint) return cachedTeeEndpoint;
+  if (cachedTeeEndpoint && Date.now() - cachedTeeEndpointAt < TEE_ENDPOINT_TTL_MS) {
+    return cachedTeeEndpoint;
+  }
   try {
     const { createPublicClient, http } = await import('viem');
     const client = createPublicClient({
@@ -46,6 +50,7 @@ async function getTeeEndpoint(): Promise<string> {
     const active = tees.filter(t => t.enabled && t.endpoint);
     if (!active.length) throw new Error('No active TEE nodes found');
     cachedTeeEndpoint = active[0].endpoint + '/v1/chat/completions';
+    cachedTeeEndpointAt = Date.now();
     return cachedTeeEndpoint;
   } catch (err) {
     console.error('[opengradient] TEE discovery failed:', err);

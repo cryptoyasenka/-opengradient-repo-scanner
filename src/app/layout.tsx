@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     description: "AI-powered supply chain security analysis for GitHub repositories, verified on-chain via TEE.",
   },
   icons: {
-    icon: "https://cdn.jsdelivr.net/gh/golldyck/opengradient-brand-skill@main/logos/og-logo-cyan.webp",
+    icon: "https://cdn.jsdelivr.net/gh/golldyck/opengradient-brand-skill@6915d255adef9701e0439a30c31a1a71558acb2b/logos/og-logo-cyan.webp",
   },
 };
 
@@ -46,7 +46,9 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-[#0a0f19]">
         <Script
-          src="https://cdn.jsdelivr.net/gh/golldyck/opengradient-brand-skill@main/og-skill.js"
+          src="https://cdn.jsdelivr.net/gh/golldyck/opengradient-brand-skill@6915d255adef9701e0439a30c31a1a71558acb2b/og-skill.js"
+          integrity="sha384-0LMcTh+mDRtewA0yN7DGktDn3Q79xxuOJbR04Enuwyoh4juA8R88duX7o3gzSCMu"
+          crossOrigin="anonymous"
           strategy="afterInteractive"
         />
         <NuqsAdapter>
