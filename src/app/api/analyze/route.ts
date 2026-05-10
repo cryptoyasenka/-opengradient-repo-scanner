@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { analyzeRepo } from '@/lib/opengradient';
 import { fetchRepoData, parseOwnerRepo } from '@/lib/github';
+import { checkOrigin, checkRateLimit } from '@/lib/rate-limit';
 import type { FetchRepoError } from '@/types/github';
 import type { AnalyzeError } from '@/types/verdict';
 
@@ -8,6 +9,22 @@ export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
 export async function POST(req: NextRequest) {
+  const origin = checkOrigin(req);
+  if (!origin.ok) {
+    return NextResponse.json<AnalyzeError>(
+      { error: origin.reason, code: 'INVALID_INPUT' },
+      { status: 403 }
+    );
+  }
+
+  const rate = checkRateLimit(req, 'analyze', 10, 60_000);
+  if (!rate.ok) {
+    return NextResponse.json<AnalyzeError>(
+      { error: `Rate limit exceeded. Retry in ${rate.retryAfterSeconds}s.`, code: 'INVALID_INPUT' },
+      { status: 429, headers: { 'Retry-After': String(rate.retryAfterSeconds) } }
+    );
+  }
+
   let body: { repo?: string };
   try {
     body = await req.json();

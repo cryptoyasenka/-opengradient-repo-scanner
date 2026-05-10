@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { fetchRepoData, parseOwnerRepo } from '@/lib/github';
+import { checkOrigin, checkRateLimit } from '@/lib/rate-limit';
 import type { FetchRepoError } from '@/types/github';
 
 export const dynamic = 'force-dynamic';
@@ -10,6 +11,22 @@ if (!process.env.GITHUB_TOKEN) {
 }
 
 export async function POST(req: NextRequest) {
+  const origin = checkOrigin(req);
+  if (!origin.ok) {
+    return NextResponse.json<FetchRepoError>(
+      { error: origin.reason, code: 'INVALID_URL' },
+      { status: 403 }
+    );
+  }
+
+  const rate = checkRateLimit(req, 'fetch-repo', 20, 60_000);
+  if (!rate.ok) {
+    return NextResponse.json<FetchRepoError>(
+      { error: `Rate limit exceeded. Retry in ${rate.retryAfterSeconds}s.`, code: 'API_ERROR' },
+      { status: 429, headers: { 'Retry-After': String(rate.retryAfterSeconds) } }
+    );
+  }
+
   let body: { repo?: string };
   try {
     body = await req.json();
